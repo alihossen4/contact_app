@@ -44,7 +44,7 @@ class _AddContactState extends State<AddContact> {
             child: IconButton( 
               iconSize: 50,
               style:ButtonStyle(
-              foregroundColor:WidgetStateProperty.all(Colors.blue) ,
+              foregroundColor:WidgetStateProperty.all(Colors.indigo.shade400) ,
             ), onPressed: (){}, icon: Icon(Icons.camera_alt_rounded)),
           )
         ],),
