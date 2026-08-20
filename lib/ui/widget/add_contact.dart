@@ -3,14 +3,32 @@ import 'package:flutter/material.dart';
 
 class AddContact extends StatefulWidget {
   const AddContact({super.key});
-
+  
   @override
   State<AddContact> createState() => _AddContactState();
+  
+  
 }
 
 class _AddContactState extends State<AddContact> {
+  
+    final TextEditingController nameController = TextEditingController();
+    final TextEditingController emailController = TextEditingController();
+    final TextEditingController numberController = TextEditingController();
+    final TextEditingController addressController = TextEditingController();
+
+  @override
+    void dispose(){
+      nameController.dispose();
+      emailController.dispose();
+      numberController.dispose();
+      addressController.dispose();
+      super.dispose();
+    }
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
@@ -40,12 +58,97 @@ class _AddContactState extends State<AddContact> {
           CircleAvatar(
             
             radius: 50,
-            backgroundColor: Colors.grey.shade200,
+            backgroundColor: Colors.lightBlue.shade50,
             child: IconButton( 
               iconSize: 50,
               style:ButtonStyle(
-              foregroundColor:WidgetStateProperty.all(Colors.indigo.shade400) ,
+              foregroundColor:WidgetStateProperty.all(Colors.blue.shade800) ,
             ), onPressed: (){}, icon: Icon(Icons.camera_alt_rounded)),
+          ),
+          Column(
+            children: [
+              SizedBox(height: 35,),
+              TextField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  maintainHintSize: true,
+                  focusColor: Colors.grey.shade200,
+                  prefixIcon: Icon(Icons.person_outline),
+                  hintText: "Name",
+                  fillColor: Colors.green,
+                  
+                  hintStyle: TextStyle(fontSize: 20, color: Colors.grey.shade500),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  )
+                ),
+              ),
+              SizedBox(height: 15,),
+              TextField(
+                autofocus: false,
+                controller: numberController,
+                decoration: InputDecoration(
+                  maintainHintSize: true,
+                  focusColor: Colors.grey.shade200,
+                  prefixIcon: Icon(Icons.phone),
+                  hintText: "Phone Number",
+                   hintStyle: TextStyle(fontSize: 20, color: Colors.grey.shade500),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  )
+                ),
+              ),
+              SizedBox(height: 15,),
+              TextField(
+                controller: emailController,
+                decoration: InputDecoration(
+                  maintainHintSize: true,
+                  focusColor: Colors.grey.shade200,
+                  prefixIcon: Icon(Icons.mail_outlined),
+                  hintText: "Email",
+                   hintStyle: TextStyle(fontSize: 20, color: Colors.grey.shade500),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  )
+                ),
+              ),
+              SizedBox(height: 15,),
+              TextField(
+                controller: addressController,
+                decoration: InputDecoration(
+                  maintainHintSize: true,
+                  focusColor: Colors.grey.shade200,
+                  prefixIcon: Icon(Icons.location_on_outlined),
+                  hintText: "Address",
+                   hintStyle: TextStyle(fontSize: 20, color: Colors.grey.shade500),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  )
+                ),
+              ),
+              SizedBox(height: 40,),
+              Container(
+          
+                width: double.infinity,
+                child: FilledButton(onPressed: (){
+                  final string = nameController.text;
+                  final String1 = emailController.text;
+                  final String2 = numberController.text;
+                  final String3 = addressController.text;
+                  print("$string");
+          
+                } ,style: FilledButton.styleFrom(
+                  backgroundColor: Colors.blue.shade700,
+                  padding: .symmetric(horizontal:5,vertical: 15 ),
+                  textStyle: TextStyle(fontSize: 24),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ), child: Text("Save Contact")),
+              ),
+              
+            ],
+          
           )
         ],),
       ),

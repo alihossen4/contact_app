@@ -15,7 +15,6 @@ class MyWidget extends StatelessWidget {
           actions: [
             IconButton(onPressed: (){},icon: Icon(Icons.search),),
             IconButton(onPressed: (){},icon: Icon(Icons.more_vert),)
-
           ],
     );
   }
