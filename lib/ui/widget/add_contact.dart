@@ -1,3 +1,5 @@
+import 'package:contact_app/db/contact_database.dart';
+import 'package:contact_app/model/contact.dart';
 import 'package:contact_app/ui/widget/appbar.dart';
 import 'package:flutter/material.dart';
 
@@ -17,6 +19,10 @@ class _AddContactState extends State<AddContact> {
     final TextEditingController numberController = TextEditingController();
     final TextEditingController addressController = TextEditingController();
 
+  Future<void> addContact()async{
+    ContactDatabase.insertContact(
+      Contact(name:nameController.text, email: emailController.text, phoneNumber: numberController.text, address: addressController.text));
+  }
   @override
     void dispose(){
       nameController.dispose();
@@ -25,6 +31,8 @@ class _AddContactState extends State<AddContact> {
       addressController.dispose();
       super.dispose();
     }
+  // List<Contact> contacts = [];
+
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +84,6 @@ class _AddContactState extends State<AddContact> {
                   prefixIcon: Icon(Icons.person_outline),
                   hintText: "Name",
                   fillColor: Colors.green,
-                  
                   hintStyle: TextStyle(fontSize: 20, color: Colors.grey.shade500),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5),
@@ -131,11 +138,7 @@ class _AddContactState extends State<AddContact> {
           
                 width: double.infinity,
                 child: FilledButton(onPressed: (){
-                  final string = nameController.text;
-                  final String1 = emailController.text;
-                  final String2 = numberController.text;
-                  final String3 = addressController.text;
-                  print("$string");
+                  addContact();
           
                 } ,style: FilledButton.styleFrom(
                   backgroundColor: Colors.blue.shade700,
