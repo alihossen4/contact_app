@@ -10,7 +10,7 @@ class ContactDatabase {
     
     db = await openDatabase(
       p.join(await getDatabasesPath(), 'contact.db'),
-      onCreate: (_db,  version){
+      onCreate: (Database _db, int version){
         return _db.execute('CREATE TABLE contact(id INTEGER PRIMARY KEY AUTOINCREMENT,name Text,phoneNumber INTEGER, email, Text, address Text)');
       },
       version: 1,
@@ -20,7 +20,7 @@ class ContactDatabase {
 
   static Future<List<Contact>?> insertContact(Contact contact) async{
     final db = await getDb();
-    db.insert('contacts', contact.toMap());
+    db.insert('contact', contact.toMap());
     
   }
 

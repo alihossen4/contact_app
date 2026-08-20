@@ -134,8 +134,7 @@ class _AddContactState extends State<AddContact> {
                 ),
               ),
               SizedBox(height: 40,),
-              Container(
-          
+              SizedBox(
                 width: double.infinity,
                 child: FilledButton(onPressed: (){
                   addContact();

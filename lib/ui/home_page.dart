@@ -14,19 +14,19 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState(){
-    super.initState();
     refreshContact();
+    super.initState();
   }
 
   List<Contact> contacts = [];
 
   Future<void> refreshContact()async{
-    setState(()async{
     contacts = await ContactDatabase.getContact();
+    print(contacts);
+    setState(()async{
 
     });
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -109,14 +109,15 @@ class _HomePageState extends State<HomePage> {
           //   child: Image.asset("assets/images/contact_home.png"),
           // ),
           SizedBox(height: 10,),
-
            Text("No Contacts yet", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),),
-           ListView.builder(itemCount:contacts.length, itemBuilder: (context,index){
-            return ListTile(
-              leading: Text(contacts[index].name),
-              title: Text(contacts[index].phoneNumber),
-            );
-          }),          
+           Expanded(
+             child: ListView.builder(itemCount:contacts.length, itemBuilder: (context,index){
+              return ListTile(
+                leading: Text(contacts[index].name),
+                title: Text(contacts[index].phoneNumber),
+              );
+                       }),
+           ),          
         ],
       ),
       floatingActionButton:  IconButton(

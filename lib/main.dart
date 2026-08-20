@@ -1,7 +1,17 @@
 import 'package:contact_app/ui/home_page.dart';
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart'; 
 
 void main() {
+   WidgetsFlutterBinding.ensureInitialized();
+
+  // ২. অ্যাপ লিনাক্স বা ডেক্সটপে চললে FFI ডাটাবেজ ফ্যাক্টরি সেট করুন [✉]
+  if (Platform.isLinux || Platform.isWindows || Platform.isMacOS) {
+    sqfliteFfiInit(); // FFI ইঞ্জিন চালু করুন [✉]
+    databaseFactory = databaseFactoryFfi; // গ্লোবাল ফ্যাক্টরি অ্যাসাইন করুন [✉]
+  }
+
   runApp(const MyApp());
 }
 
