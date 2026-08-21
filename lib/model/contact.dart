@@ -19,7 +19,13 @@ class Contact {
     };
   }
 
-  factory Contact.formMap(Map<String, dynamic> maps){
-    return Contact(id: maps['id'],name: maps['name'],phoneNumber: maps['phoneNumber'], email: maps['email'], address: maps['address']);
-  }
+  factory Contact.fromMap(Map<String, dynamic> map) {
+  return Contact(
+    id: map['id'],
+    name: map['name'],
+    phoneNumber: map['phoneNumber'], 
+    email: map['email'], 
+    address: map['address'],
+  );
+}
 }

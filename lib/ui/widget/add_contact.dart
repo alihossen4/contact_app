@@ -19,13 +19,12 @@ class _AddContactState extends State<AddContact> {
     final TextEditingController addressController = TextEditingController();
 
   Future<void> addContact()async{
-    ContactDatabase.insertContact(
-      Contact(name:nameController.text, email: emailController.text, phoneNumber: numberController.text, address: addressController.text));
+    DatabaseHelper.instance.insertContact(
+      Contact(name:nameController.text, email: emailController.text, phoneNumber: numberController.text, address: addressController.text).toMap());
       nameController.clear();
       emailController.clear();
       numberController.clear();
       addressController.clear();
-
   }
   @override
     void dispose(){
@@ -47,7 +46,6 @@ class _AddContactState extends State<AddContact> {
         // leading: IconBucontexttton(onPressed: (){}, icon: Icon(Icons.menu)),
         title: Text("Add Contact"),
         actions: [
-
           IconButton(
             padding: .symmetric(vertical:5),
             iconSize: 30,
@@ -56,9 +54,8 @@ class _AddContactState extends State<AddContact> {
               
             ),
             onPressed: (){},icon: Icon(Icons.check),),
-          SizedBox(width: 10,)
+          SizedBox(width: 10,),
           // IconButton(onPressed: (){},icon: Icon(Icons.more_vert),)
-
         ],
       ),
       body: Container(

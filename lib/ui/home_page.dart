@@ -1,6 +1,7 @@
 import 'package:contact_app/db/contact_database.dart';
 import 'package:contact_app/model/contact.dart';
 import 'package:contact_app/ui/widget/add_contact.dart';
+import 'package:contact_app/ui/widget/my_contact.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -21,7 +22,7 @@ class _HomePageState extends State<HomePage> {
   List<Contact> contacts = [];
 
   Future<void> refreshContact()async{
-    final data = await ContactDatabase.getContact();
+    final data = await DatabaseHelper.instance.getContact();
     setState((){
       contacts = data;
       print(contacts);
@@ -100,26 +101,24 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
       ),
-      body: Column(
-        children: [
+      body: MyContact(),
 
-          Container(
-            padding: .symmetric(horizontal: 45),
-            margin: .only(top: 80),
-            child: Image.asset("assets/images/contact_home.png"),
-          ),
-          SizedBox(height: 10,),
-           Text("No Contacts yet", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),),
-           Expanded(
-             child: ListView.builder(itemCount:contacts.length, itemBuilder: (context,index){
-              return ListTile(
-                leading: Text(contacts[index].name),
-                title: Text(contacts[index].phoneNumber),
-              );
-                       }),
-           ),          
-        ],
-      ),
+      // body: Column(
+      //   children: [
+
+          
+      //     SizedBox(height: 10,),
+      //      Text("No Contacts yet", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),),
+      //     //  Expanded(
+      //     //    child: ListView.builder(itemCount:contacts.length, itemBuilder: (context,index){
+      //     //     return ListTile(
+      //     //       leading: Text(contacts[index].name),
+      //     //       title: Text(contacts[index].phoneNumber),
+      //     //     );
+      //     //              }),
+      //     //  ),          
+      //   ],
+      // ),
       floatingActionButton:  IconButton(
         padding: .all(5),
         iconSize: 45,
