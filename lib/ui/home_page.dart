@@ -66,7 +66,9 @@ class _HomePageState extends State<HomePage> {
                   ],),
                 )),
               ListTile(
-                leading: Icon(Icons.contact_page_outlined),
+                leading: IconButton(
+                  onPressed:(){ Navigator.push(context, MaterialPageRoute(builder: (context)=>  MyContact()));},
+                  icon: Icon(Icons.contact_page_outlined)),
                 title: Text("My Contacts"),
               ),
               ListTile(
