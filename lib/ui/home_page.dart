@@ -21,10 +21,10 @@ class _HomePageState extends State<HomePage> {
   List<Contact> contacts = [];
 
   Future<void> refreshContact()async{
-    contacts = await ContactDatabase.getContact();
-    print(contacts);
-    setState(()async{
-
+    final data = await ContactDatabase.getContact();
+    setState((){
+      contacts = data;
+      print(contacts);
     });
   }
 
@@ -103,11 +103,11 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         children: [
 
-          // Container(
-          //   padding: .symmetric(horizontal: 45),
-          //   margin: .only(top: 80),
-          //   child: Image.asset("assets/images/contact_home.png"),
-          // ),
+          Container(
+            padding: .symmetric(horizontal: 45),
+            margin: .only(top: 80),
+            child: Image.asset("assets/images/contact_home.png"),
+          ),
           SizedBox(height: 10,),
            Text("No Contacts yet", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),),
            Expanded(

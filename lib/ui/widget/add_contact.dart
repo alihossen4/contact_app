@@ -1,6 +1,5 @@
 import 'package:contact_app/db/contact_database.dart';
 import 'package:contact_app/model/contact.dart';
-import 'package:contact_app/ui/widget/appbar.dart';
 import 'package:flutter/material.dart';
 
 class AddContact extends StatefulWidget {
@@ -22,6 +21,11 @@ class _AddContactState extends State<AddContact> {
   Future<void> addContact()async{
     ContactDatabase.insertContact(
       Contact(name:nameController.text, email: emailController.text, phoneNumber: numberController.text, address: addressController.text));
+      nameController.clear();
+      emailController.clear();
+      numberController.clear();
+      addressController.clear();
+
   }
   @override
     void dispose(){
@@ -32,7 +36,6 @@ class _AddContactState extends State<AddContact> {
       super.dispose();
     }
   // List<Contact> contacts = [];
-
 
   @override
   Widget build(BuildContext context) {

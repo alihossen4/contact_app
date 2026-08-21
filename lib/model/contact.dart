@@ -1,13 +1,13 @@
 
 
 class Contact {
-  final int? id;
-  final String name;
-  final String phoneNumber;
-  final String email;
-  String? address;
+   final int? id;
+   final String name;
+   final String phoneNumber;
+   final String email;
+   final String address;
 
-  Contact({this.id, required this.name,required this.phoneNumber, required this.email, this.address});
+  Contact({this.id, required this.name,required this.phoneNumber, required this.email,required this.address});
 
   Map<String, dynamic> toMap(){
     return {
