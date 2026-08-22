@@ -83,7 +83,7 @@ class _MyContactState extends State<MyContact> {
             ),
             trailing: IconButton(onPressed: (){
               Navigator.push(context,MaterialPageRoute(builder: (context)=> EditContact()));
-            },icon: Icon(Icons.arrow_right)),
+            },icon: Icon(Icons.arrow_right_outlined)),
           );
         },
       ),

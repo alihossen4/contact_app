@@ -64,23 +64,23 @@ class _EditContactState extends State<EditContact> {
             ),
             SizedBox(height: 25,),
             ListTile(
-              title: Text("Name"),
-              subtitle: Text(contacts[0].name),
+              title: Text("Name",style: TextStyle(fontSize: 14),),
+              subtitle: Text(contacts[0].name,style: TextStyle(fontWeight: FontWeight.bold ,fontSize: 20) ),
             ),
             SizedBox(height: 10,),
             ListTile(
-              title: Text("Phone Number"),
-              subtitle: Text(contacts[0].phoneNumber),
+              title: Text("Phone Number",style: TextStyle(fontSize: 14), ),
+              subtitle: Text(contacts[0].phoneNumber,style: TextStyle(fontWeight: FontWeight.bold ,fontSize: 20),),
             ),
             SizedBox(height: 10,),
             ListTile(
-              title: Text("Email"),
-              subtitle: Text(contacts[0].email),
+              title: Text("Email",style: TextStyle(fontSize: 14),),
+              subtitle: Text(contacts[0].email ,style: TextStyle(fontWeight: FontWeight.bold ,fontSize: 20)),
             ),
             SizedBox(height: 10,),
             ListTile(
-              title: Text("Adress"),
-              subtitle: Text(contacts[0].address),
+              title: Text("Adress",style: TextStyle(fontSize: 14),),
+              subtitle: Text(contacts[0].address ,style: TextStyle(fontWeight: FontWeight.bold ,fontSize: 20)),
             ),
             
             SizedBox(height: 30,),
