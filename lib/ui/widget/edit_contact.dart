@@ -1,4 +1,5 @@
-
+import 'package:contact_app/db/contact_database.dart';
+import 'package:contact_app/model/contact.dart';
 import 'package:flutter/material.dart';
 
 class EditContact extends StatefulWidget {
@@ -9,6 +10,22 @@ class EditContact extends StatefulWidget {
 }
 
 class _EditContactState extends State<EditContact> {
+
+  @override
+  void initState(){
+    refreshContact();
+    super.initState();
+  }
+
+  List<Contact> contacts = [];
+
+  Future<void> refreshContact()async{
+    final data = await DatabaseHelper.instance.getContact();
+    setState((){
+      contacts = data;
+    
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,23 +64,23 @@ class _EditContactState extends State<EditContact> {
             ),
             SizedBox(height: 25,),
             ListTile(
-              subtitle: Text("Name"),
-              title: Text(""),
+              title: Text("Name"),
+              subtitle: Text(contacts[0].name),
             ),
             SizedBox(height: 10,),
             ListTile(
-              subtitle: Text("Name"),
-              title: Text(""),
+              title: Text("Phone Number"),
+              subtitle: Text(contacts[0].phoneNumber),
             ),
             SizedBox(height: 10,),
             ListTile(
-              subtitle: Text("Name"),
-              title: Text(""),
+              title: Text("Email"),
+              subtitle: Text(contacts[0].email),
             ),
             SizedBox(height: 10,),
             ListTile(
-              subtitle: Text("Name"),
-              title: Text(""),
+              title: Text("Adress"),
+              subtitle: Text(contacts[0].address),
             ),
             
             SizedBox(height: 30,),

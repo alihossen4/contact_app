@@ -13,21 +13,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  @override
-  void initState(){
-    refreshContact();
-    super.initState();
-  }
-
-  List<Contact> contacts = [];
-
-  Future<void> refreshContact()async{
-    final data = await DatabaseHelper.instance.getContact();
-    setState((){
-      contacts = data;
-      print(contacts);
-    });
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +53,7 @@ class _HomePageState extends State<HomePage> {
                 )),
               ListTile(
                 leading: IconButton(
-                  onPressed:(){ Navigator.push(context, MaterialPageRoute(builder: (context)=>  MyContact()));},
+                  onPressed:(){ Navigator.push(context, MaterialPageRoute(builder: (context)=>  HomePage()));},
                   icon: Icon(Icons.contact_page_outlined)),
                 title: Text("My Contacts"),
               ),
