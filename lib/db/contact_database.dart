@@ -3,6 +3,7 @@ import 'package:contact_app/model/contact.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as p;
+// import 'package:sqflite_common/sqlite_api.dart';
 
 // class ContactDatabase {
 //   static Database? myDb;
@@ -79,10 +80,10 @@ import 'package:path/path.dart' as p;
 
 class DatabaseHelper {
   // Singleton pattern setup
-  static final DatabaseHelper instance = DatabaseHelper._init();
+  static final DatabaseHelper instance = DatabaseHelper.init();
   static Database? _database;
 
-  DatabaseHelper._init();
+  DatabaseHelper.init();
 
   // Get the active database connection
   Future<Database> get database async {

@@ -34,7 +34,7 @@ class _MyContactState extends State<MyContact> {
 
       //   ],
       // ),
-      body: FutureBuilder<List<Contact>>(
+  body: FutureBuilder<List<Contact>>(
   future: DatabaseHelper.instance.getContact(), 
   builder: (context, snapshot) {
     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -57,36 +57,43 @@ class _MyContactState extends State<MyContact> {
     // 2. You now have a clean list of Contact objects!
     final List<Contact> contacts = snapshot.data!;
 
-    return Expanded(
-      child: ListView.builder(
-        itemCount: contacts.length,
-        itemBuilder: (context, index) {
-           if (contacts.isEmpty || index >= contacts.length) {
-            return const SizedBox.shrink(); 
-          }
-          final contact = contacts[index];
-          return ListTile(
-            leading: CircleAvatar(
-              radius: 30,
-              child: Text(contact.name[0]),
-            ),
-            // 3. Access properties directly using dot notation
-            title: Text(contact.name,style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
-            subtitle: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return ListView.builder(
+      itemCount: contacts.length,
+      itemBuilder: (context, index) {
+         if (contacts.isEmpty || index >= contacts.length) {
+          return const SizedBox.shrink(); 
+        }
+        final contact = contacts[index];
+        return Column(
+          children: [
+            for(var i=0;i<contacts.length;i++) Row(
               children: [
-                Text(contact.email),
-                Text(contact.phoneNumber),
+                ListTile(
+                  leading: CircleAvatar(
+                    radius: 30,
+                    child: Text(contact.name[0],style: TextStyle(fontSize: 24),),
+                  ),
+                  // 3. Access properties directly using dot notation
+                  title: Text(contact.name,style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
+                  subtitle: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(contact.email),
+                      Text(contact.phoneNumber),
+                    ],
+                    
+                  ),
+                  trailing: IconButton(onPressed: (){
+                    Navigator.push(context,MaterialPageRoute(builder: (context)=> EditContact()));
+                  },icon: Icon(Icons.arrow_right_outlined)),
+                ),
               ],
-
             ),
-            trailing: IconButton(onPressed: (){
-              Navigator.push(context,MaterialPageRoute(builder: (context)=> EditContact()));
-            },icon: Icon(Icons.arrow_right_outlined)),
-          );
-        },
-      ),
+            
+          ],
+        );
+      },
     );
   },
 ),
