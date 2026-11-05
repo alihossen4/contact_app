@@ -1,5 +1,3 @@
-import 'package:contact_app/db/contact_database.dart';
-import 'package:contact_app/model/contact.dart';
 import 'package:contact_app/ui/widget/add_contact.dart';
 import 'package:contact_app/ui/widget/my_contact.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +11,16 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  
+  Future<void> _openAddContact() async {
+    final contactAdded = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(builder: (context) => const AddContact()),
+    );
+
+    if (contactAdded == true && mounted) {
+      setState(() {});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +71,7 @@ class _HomePageState extends State<HomePage> {
               ListTile(
                 
                 leading: IconButton(onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=> AddContact()));
+                  _openAddContact();
                 }, icon: Icon(Icons.star_half_rounded)),
                 title: Text("Add Contact"),
               ),
@@ -117,11 +124,7 @@ class _HomePageState extends State<HomePage> {
         ),
         hoverColor: Colors.blue,
         autofocus: false,
-        onPressed: (){
-          Navigator.push(context, 
-            MaterialPageRoute( builder: (context)=> const AddContact())
-          );
-        }, icon: Icon(Icons.add)),
+        onPressed: _openAddContact, icon: Icon(Icons.add)),
         
       // body: ,
     );

@@ -19,12 +19,10 @@ class _AddContactState extends State<AddContact> {
     final TextEditingController addressController = TextEditingController();
 
   Future<void> addContact()async{
-    DatabaseHelper.instance.insertContact(
+    await DatabaseHelper.instance.insertContact(
       Contact(name:nameController.text, email: emailController.text, phoneNumber: numberController.text, address: addressController.text).toMap());
-      nameController.clear();
-      emailController.clear();
-      numberController.clear();
-      addressController.clear();
+    if (!mounted) return;
+    Navigator.pop(context, true);
   }
   @override
     void dispose(){
@@ -54,7 +52,7 @@ class _AddContactState extends State<AddContact> {
               backgroundColor: WidgetStateProperty.all(Colors.blue.shade700),
               
             ),
-            onPressed: (){},icon: Icon(Icons.check),),
+            onPressed: addContact,icon: Icon(Icons.check),),
           SizedBox(width: 10,),
           // IconButton(onPressed: (){},icon: Icon(Icons.more_vert),)
         ],
@@ -137,10 +135,7 @@ class _AddContactState extends State<AddContact> {
               SizedBox(height: 40,),
               SizedBox(
                 width: double.infinity,
-                child: FilledButton(onPressed: (){
-                  addContact();
-          
-                } ,style: FilledButton.styleFrom(
+                child: FilledButton(onPressed: addContact, style: FilledButton.styleFrom(
                   backgroundColor: Colors.blue.shade700,
                   padding: .symmetric(horizontal:5,vertical: 15 ),
                   textStyle: TextStyle(fontSize: 24),

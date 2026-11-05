@@ -64,34 +64,26 @@ class _MyContactState extends State<MyContact> {
           return const SizedBox.shrink(); 
         }
         final contact = contacts[index];
-        return Column(
-          children: [
-            for(var i=0;i<contacts.length;i++) Row(
-              children: [
-                ListTile(
-                  leading: CircleAvatar(
-                    radius: 30,
-                    child: Text(contact.name[0],style: TextStyle(fontSize: 24),),
-                  ),
-                  // 3. Access properties directly using dot notation
-                  title: Text(contact.name,style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
-                  subtitle: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(contact.email),
-                      Text(contact.phoneNumber),
-                    ],
-                    
-                  ),
-                  trailing: IconButton(onPressed: (){
-                    Navigator.push(context,MaterialPageRoute(builder: (context)=> EditContact()));
-                  },icon: Icon(Icons.arrow_right_outlined)),
-                ),
-              ],
+        return ListTile(
+          leading: CircleAvatar(
+            radius: 30,
+            child: Text(
+              contact.name.isNotEmpty ? contact.name[0] : '?',
+              style: TextStyle(fontSize: 24),
             ),
-            
-          ],
+          ),
+          title: Text(contact.name,style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
+          subtitle: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(contact.email),
+              Text(contact.phoneNumber),
+            ],
+          ),
+          trailing: IconButton(onPressed: (){
+            Navigator.push(context,MaterialPageRoute(builder: (context)=> EditContact()));
+          },icon: Icon(Icons.arrow_right_outlined)),
         );
       },
     );
