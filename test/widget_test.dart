@@ -1,4 +1,7 @@
 import 'package:contact_app/main.dart';
+import 'package:contact_app/db/contact_database.dart';
+import 'package:contact_app/model/contact.dart';
+import 'package:contact_app/ui/widget/edit_contact.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -9,35 +12,78 @@ void main() {
     databaseFactory = databaseFactoryFfi;
   });
 
-  testWidgets('saving a contact returns to the list and displays it', (
+  testWidgets('contact list opens the add contact form', (
     WidgetTester tester,
   ) async {
-    tester.view.physicalSize = const Size(1000, 1400);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
-
     await tester.pumpWidget(const MyApp());
-    await tester.runAsync(
-      () => Future<void>.delayed(const Duration(milliseconds: 500)),
-    );
-    await tester.pumpAndSettle();
+    expect(find.text('Contacts'), findsOneWidget);
+
     await tester.tap(find.byIcon(Icons.add));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
 
-    final contactName = 'Ada Lovelace ${DateTime.now().microsecondsSinceEpoch}';
-    await tester.enterText(find.byType(TextField).at(0), contactName);
-    await tester.enterText(find.byType(TextField).at(1), '555-0100');
-    await tester.enterText(find.byType(TextField).at(2), 'ada@example.com');
-    await tester.enterText(find.byType(TextField).at(3), 'London');
-    final saveContact = tester.widget<FilledButton>(find.byType(FilledButton)).onPressed!;
-    await tester.runAsync(
-      () => (saveContact as Future<void> Function())(),
+    expect(find.text('New contact'), findsOneWidget);
+  });
+
+  testWidgets('edit contact form starts with the selected contact details', (
+    WidgetTester tester,
+  ) async {
+    final contact = Contact(
+      id: 12,
+      name: 'Alex Example',
+      phoneNumber: '555-0123',
+      email: 'alex@example.com',
+      address: 'Main Street',
     );
-    await tester.pumpAndSettle();
 
-    expect(find.text('My Contacts'), findsOneWidget);
-    expect(find.text(contactName), findsOneWidget);
-    expect(find.text('ada@example.com'), findsOneWidget);
+    await tester.pumpWidget(MaterialApp(home: EditContact(contact: contact)));
+
+    expect(find.text('Edit contact'), findsOneWidget);
+    expect(find.text('Save changes'), findsOneWidget);
+    expect(
+      tester.widget<TextField>(find.byType(TextField).at(0)).controller!.text,
+      'Alex Example',
+    );
+    expect(
+      tester.widget<TextField>(find.byType(TextField).at(1)).controller!.text,
+      '555-0123',
+    );
+  });
+
+  test('editing a contact persists the changed details', () async {
+    final marker = DateTime.now().microsecondsSinceEpoch.toString();
+    final database = DatabaseHelper.instance;
+    final id = await database.insertContact(
+      Contact(
+        name: 'Test contact $marker',
+        phoneNumber: '555-0100',
+        email: 'before-$marker@example.com',
+        address: 'Old address',
+      ).toMap(),
+    );
+
+    try {
+      final updatedCount = await database.updateContact(
+        Contact(
+          id: id,
+          name: 'Updated contact $marker',
+          phoneNumber: '555-0101',
+          email: 'after-$marker@example.com',
+          address: 'New address',
+        ),
+      );
+      final savedContact = (await database.getContact()).singleWhere(
+        (contact) => contact.id == id,
+      );
+
+      expect(updatedCount, 1);
+      expect(savedContact.name, 'Updated contact $marker');
+      expect(savedContact.phoneNumber, '555-0101');
+      expect(savedContact.email, 'after-$marker@example.com');
+      expect(savedContact.address, 'New address');
+    } finally {
+      final db = await database.database;
+      await db.delete('contact_list', where: 'id = ?', whereArgs: [id]);
+    }
   });
 }

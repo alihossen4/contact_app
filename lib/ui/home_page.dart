@@ -26,13 +26,17 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
+        backgroundColor: const Color(0xFFF7F8FC),
+        foregroundColor: const Color(0xFF20243A),
+        elevation: 0,
+        scrolledUnderElevation: 0,
         // leading: IconButton(onPressed: (){}, icon: Icon(Icons.menu)),
-        title: Text("My Contacts"),
+        title: const Text(
+          "Contacts",
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+        ),
         actions: [
-          IconButton(onPressed: (){},icon: Icon(Icons.search),),
-          IconButton(onPressed: (){},icon: Icon(Icons.more_vert),)
+          IconButton(onPressed: (){},icon: const Icon(Icons.more_vert),)
         ],
       ),
 

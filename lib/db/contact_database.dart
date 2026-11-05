@@ -3,6 +3,7 @@ import 'package:contact_app/model/contact.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as p;
+
 // import 'package:sqflite_common/sqlite_api.dart';
 
 // class ContactDatabase {
@@ -10,7 +11,7 @@ import 'package:path/path.dart' as p;
 
 //   static Future<Database> getDb() async{
 //     if(myDb!=null) return myDb!;
-    
+
 //     myDb = await openDatabase(
 //       p.join(await getDatabasesPath(), 'app_contacts.db'),
 //       onCreate: (Database db,int version){
@@ -24,7 +25,7 @@ import 'package:path/path.dart' as p;
 //   static Future<void> insertContact(Contact contact) async{
 //     final db = await getDb();
 //     db.insert('contact', contact.toMap());
-    
+
 //   }
 
 //   static Future<List<Contact>> getContact()async{
@@ -32,7 +33,7 @@ import 'package:path/path.dart' as p;
 //     final List<Map<String, dynamic>> maps = await db.query('contact');
 
 //     return List.generate(maps.length, (i)=>Contact.formMap(maps[i]));
-    
+
 //   }
 
 // }
@@ -96,11 +97,7 @@ class DatabaseHelper {
     final dbPath = await getDatabasesPath();
     final path = p.join(dbPath, filePath);
 
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: _createDB,
-    );
+    return await openDatabase(path, version: 1, onCreate: _createDB);
   }
 
   Future _createDB(Database db, int version) async {
@@ -123,11 +120,22 @@ class DatabaseHelper {
     return await db.insert('contact_list', row);
   }
 
+  Future<int> updateContact(Contact contact) async {
+    final id = contact.id;
+    if (id == null) {
+      throw ArgumentError.value(id, 'contact.id', 'Contact must have an ID');
+    }
+
+    final db = await instance.database;
+    final values = contact.toMap()..remove('id');
+    return db.update('contact_list', values, where: 'id = ?', whereArgs: [id]);
+  }
+
   // Fetch all contacts from any file
   Future<List<Contact>> getContact() async {
     final db = await instance.database;
     final List<Map<String, dynamic>> maps = await db.query('contact_list');
-    return List.generate(maps.length, (i){
+    return List.generate(maps.length, (i) {
       return Contact.fromMap(maps[i]);
     });
   }

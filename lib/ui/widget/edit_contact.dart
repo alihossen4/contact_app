@@ -1,103 +1,179 @@
 import 'package:contact_app/db/contact_database.dart';
 import 'package:contact_app/model/contact.dart';
+import 'package:contact_app/ui/widget/contact_form_field.dart';
 import 'package:flutter/material.dart';
 
 class EditContact extends StatefulWidget {
-  const EditContact({super.key});
+  const EditContact({required this.contact, super.key});
+
+  final Contact contact;
 
   @override
   State<EditContact> createState() => _EditContactState();
 }
 
 class _EditContactState extends State<EditContact> {
+  late final TextEditingController _nameController;
+  late final TextEditingController _phoneController;
+  late final TextEditingController _emailController;
+  late final TextEditingController _addressController;
+  bool _isSaving = false;
 
   @override
-  void initState(){
-    refreshContact();
+  void initState() {
     super.initState();
+    _nameController = TextEditingController(text: widget.contact.name);
+    _phoneController = TextEditingController(text: widget.contact.phoneNumber);
+    _emailController = TextEditingController(text: widget.contact.email);
+    _addressController = TextEditingController(text: widget.contact.address);
   }
 
-  List<Contact> contacts = [];
-
-  Future<void> refreshContact()async{
-    final data = await DatabaseHelper.instance.getContact();
-    setState((){
-      contacts = data;
-    
-    });
+  Future<void> _saveContact() async {
+    if (_isSaving) return;
+    setState(() => _isSaving = true);
+    try {
+      final updatedCount = await DatabaseHelper.instance.updateContact(
+        Contact(
+          id: widget.contact.id,
+          name: _nameController.text.trim(),
+          phoneNumber: _phoneController.text.trim(),
+          email: _emailController.text.trim(),
+          address: _addressController.text.trim(),
+        ),
+      );
+      if (!mounted) return;
+      if (updatedCount == 0) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('This contact could not be found.')),
+        );
+        return;
+      }
+      Navigator.pop(context, true);
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Could not update contact: $error')),
+      );
+    } finally {
+      if (mounted) setState(() => _isSaving = false);
+    }
   }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _phoneController.dispose();
+    _emailController.dispose();
+    _addressController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final name = _nameController.text.trim();
+
     return Scaffold(
+      backgroundColor: contactPageBackground,
       appBar: AppBar(
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
-        // leading: IconBucontexttton(onPressed: (){}, icon: Icon(Icons.menu)),
-        title: Text("Edit Contact"),
+        backgroundColor: contactPageBackground,
+        foregroundColor: const Color(0xFF20243A),
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        title: const Text(
+          'Edit contact',
+          style: TextStyle(fontWeight: FontWeight.w700),
+        ),
         actions: [
-
           IconButton(
-            padding: .symmetric(vertical:5),
-            iconSize: 30,
-            style: ButtonStyle(
-              backgroundColor: WidgetStateProperty.all(Colors.blue.shade700),
-              
-            ),
-            onPressed: (){},icon: Icon(Icons.check),),
-          SizedBox(width: 10,)
-          // IconButton(onPressed: (){},icon: Icon(Icons.more_vert),)
-
+            onPressed: _isSaving ? null : _saveContact,
+            tooltip: 'Save changes',
+            icon: const Icon(Icons.check_rounded),
+          ),
         ],
       ),
-      body: Container(
-        padding: .all(20),
-        child: Column(children: [
-          SizedBox(height: 30,),
-          CircleAvatar(
-              radius: 50,
-              backgroundColor: Colors.lightBlue.shade50,
-              child: IconButton( 
-                iconSize: 50,
-                style:ButtonStyle(
-                foregroundColor:WidgetStateProperty.all(Colors.blue.shade800) ,
-              ), onPressed: (){}, icon: Icon(Icons.camera_alt_rounded)),
-            ),
-            SizedBox(height: 25,),
-            ListTile(
-              title: Text("Name",style: TextStyle(fontSize: 14),),
-              subtitle: Text(contacts[0].name,style: TextStyle(fontWeight: FontWeight.bold ,fontSize: 20) ),
-            ),
-            SizedBox(height: 10,),
-            ListTile(
-              title: Text("Phone Number",style: TextStyle(fontSize: 14), ),
-              subtitle: Text(contacts[0].phoneNumber,style: TextStyle(fontWeight: FontWeight.bold ,fontSize: 20),),
-            ),
-            SizedBox(height: 10,),
-            ListTile(
-              title: Text("Email",style: TextStyle(fontSize: 14),),
-              subtitle: Text(contacts[0].email ,style: TextStyle(fontWeight: FontWeight.bold ,fontSize: 20)),
-            ),
-            SizedBox(height: 10,),
-            ListTile(
-              title: Text("Adress",style: TextStyle(fontSize: 14),),
-              subtitle: Text(contacts[0].address ,style: TextStyle(fontWeight: FontWeight.bold ,fontSize: 20)),
-            ),
-            
-            SizedBox(height: 30,),
-            SizedBox(
-                  width: double.infinity,
-                  child: FilledButton(onPressed: (){
-            
-                  } ,style: FilledButton.styleFrom(
-                    backgroundColor: Colors.blue.shade700,
-                    padding: .symmetric(horizontal:5,vertical: 15 ),
-                    textStyle: TextStyle(fontSize: 24),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ), child: Text("Save Contact")),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(20, 18, 20, 28),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Center(
+              child: CircleAvatar(
+                radius: 46,
+                backgroundColor: const Color(0xFFE6E9FF),
+                child: Text(
+                  name.isNotEmpty ? name[0].toUpperCase() : '?',
+                  style: const TextStyle(
+                    color: Color(0xFF343A60),
+                    fontSize: 32,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-        ],),
+              ),
+            ),
+            const SizedBox(height: 18),
+            const Text(
+              'Update contact details',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Color(0xFF20243A),
+                fontSize: 22,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 6),
+            const Text(
+              'Your changes will appear in your contact list.',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Color(0xFF7D8295), fontSize: 14),
+            ),
+            const SizedBox(height: 28),
+            ContactFormField(
+              controller: _nameController,
+              label: 'Name',
+              icon: Icons.person_outline_rounded,
+              keyboardType: TextInputType.name,
+            ),
+            const SizedBox(height: 14),
+            ContactFormField(
+              controller: _phoneController,
+              label: 'Phone number',
+              icon: Icons.phone_outlined,
+              keyboardType: TextInputType.phone,
+            ),
+            const SizedBox(height: 14),
+            ContactFormField(
+              controller: _emailController,
+              label: 'Email',
+              icon: Icons.mail_outline_rounded,
+              keyboardType: TextInputType.emailAddress,
+            ),
+            const SizedBox(height: 14),
+            ContactFormField(
+              controller: _addressController,
+              label: 'Address',
+              icon: Icons.location_on_outlined,
+              keyboardType: TextInputType.streetAddress,
+            ),
+            const SizedBox(height: 24),
+            FilledButton.icon(
+              onPressed: _isSaving ? null : _saveContact,
+              icon: const Icon(Icons.check_rounded),
+              label: Text(_isSaving ? 'Saving...' : 'Save changes'),
+              style: FilledButton.styleFrom(
+                backgroundColor: contactAccent,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                textStyle: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
